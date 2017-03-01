@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "npm run docker:stop && npm run docker:build && npm run docker:start && npm run test:unit",
-    "test:unit": "docker-compose run -e NODE_ENV=test-docker-local -e NODE_CONFIG_DIR=/app/src/config node /app/node_modules/mocha/bin/mocha /app/src/test/unit --recursive",
+    "test:unit": "docker-compose -f docker-compose.json run -e NODE_ENV=test-docker-local -e NODE_CONFIG_DIR=/app/config node /app/node_modules/mocha/bin/mocha /app/test/unit --recursive",
     "docker:build": "docker build -f Dockerfile -t foundryai/foundry-kue-scheduler:latest .",
     "docker:start": "docker-compose -f docker-compose.json up",
     "docker:stop": "docker-compose -f docker-compose.json stop"
@@ -34,6 +34,7 @@
     "config": "1.21.0",
     "config-uncached": "1.0.2",
     "hapiest-logger": "0.0.5",
+    "kue": "^0.11.1",
     "mocha": "2.5.3",
     "should": "9.0.2"
   }

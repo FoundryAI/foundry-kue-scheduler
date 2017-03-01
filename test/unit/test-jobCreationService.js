@@ -2,7 +2,7 @@
 
 const Should = require('should');
 const NodeConfig = require('config');
-const Job = require('kue-scheduler/lib/queue/job');
+const Job = require('kue/lib/queue/job');
 const LoggerFactory = require('hapiest-logger/lib/loggerFactory');
 const logger = LoggerFactory.createLogger({
   enabled: true,
