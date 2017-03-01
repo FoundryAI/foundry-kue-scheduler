@@ -1,0 +1,20 @@
+{
+  "version": "2",
+  "services": {
+    "node": {
+      "image": "foundryai/foundry-kue-scheduler:latest",
+      "volumes": [
+        ".:/app"
+      ],
+      "depends_on": [
+        "redis"
+      ]
+    },
+    "redis": {
+      "image": "redis:3.0",
+      "ports": [
+        "6379:6379"
+      ]
+    }
+  }
+}
