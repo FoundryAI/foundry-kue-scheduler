@@ -1,6 +1,6 @@
 {
   "name": "foundry-kue-scheduler",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple wrapper for kue/kue-scheduler that hooks it up with node-config and provides logical separation between job creation and job processing",
   "main": "index.js",
   "repository": {
