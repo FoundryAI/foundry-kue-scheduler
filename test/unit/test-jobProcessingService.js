@@ -1,5 +1,6 @@
 'use strict';
 
+const Promise = require('bluebird');
 const Should = require('should');
 const NodeConfig = require('config');
 const Kue = require('kue-scheduler');
@@ -23,7 +24,7 @@ var queue;
 
 describe('JobProcessingFactory', function() {
 
-  before(() => {
+  beforeEach(() => {
     // kue.createFromConfig leverages a singleton underneath the hood
     // To test creating Queue's with different settings, we need to null out the singleton to allow re-create
     Kue.singleton = null;
@@ -148,6 +149,52 @@ describe('JobProcessingFactory', function() {
       })
     })
 
+  });
+
+  describe('shutdown', function() {
+    it('Should finish processing four ping jobs before shutting down', function() {
+      this.timeout(10000);
+
+      const pingJobsProcessed = [];
+      let pingJobProcessor;
+
+      return Promise.resolve()
+      .then(() => creationService.createJob('ping3', {wait: 1000}, {ttlInMs: 2000}))
+      .then(() => creationService.createJob('ping3', {wait: 500}, {ttlInMs: 1000, priority: 'low'}))
+      .then(() => creationService.createJob('ping3', {wait: 200}, {ttlInMs: 1000, priority: 'low'}))
+      .then(() => creationService.createJob('ping3', {wait: 100}, {ttlInMs: 500}))
+      .then(() => creationService.createJob('ping3', {wait: 6000}, {ttlInMs: 10000})) // this one shouldn't have time to finish
+      .then(() => {
+        pingJobProcessor = {
+          jobType: 'ping3',
+          process: function(jobId, data){
+            return Promise.resolve()
+              .delay(data.wait)
+              .then(() => {
+                this.checkingBind = 'checked';
+                pingJobsProcessed.push({
+                  jobId: jobId,
+                  data: data
+                });
+              });
+          },
+          concurrency: 4
+        };
+        processingService.registerJobProcessorObject(pingJobProcessor);
+      })
+      .delay(500)
+      .then(() => processingService.shutdown(2000))
+      .then(() => {
+        pingJobsProcessed.length.should.eql(4);
+        pingJobsProcessed[0].data.wait.should.eql(100);
+        pingJobsProcessed[1].data.wait.should.eql(200);
+        pingJobsProcessed[2].data.wait.should.eql(500);
+        pingJobsProcessed[3].data.wait.should.eql(1000);
+
+        pingJobProcessor.should.have.property('checkingBind');
+        pingJobProcessor.checkingBind.should.eql('checked');
+      })
+    });
   });
 
 });
