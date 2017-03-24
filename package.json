@@ -1,5 +1,5 @@
 {
-  "name": "foundry-kue-scheduler",
+  "name": "@foundry-ai/foundry-kue-scheduler",
   "version": "1.1.0",
   "description": "Simple wrapper for kue/kue-scheduler that hooks it up with node-config and provides logical separation between job creation and job processing",
   "main": "index.js",
@@ -36,5 +36,8 @@
     "hapiest-logger": "~0.1.2",
     "mocha": "~3.2.0",
     "should": "~11.2.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
