@@ -1,6 +1,6 @@
 {
   "name": "foundry-kue-scheduler",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Simple wrapper for kue/kue-scheduler that hooks it up with node-config and provides logical separation between job creation and job processing",
   "main": "index.js",
   "repository": {
@@ -28,7 +28,7 @@
   "dependencies": {
     "bluebird": "~3.5.0",
     "kue": "^0.11.5",
-    "kue-scheduler": "^0.7.0"
+    "kue-scheduler": "schmod/kue-scheduler#ce614cd"
   },
   "devDependencies": {
     "config": "~1.25.1",
